@@ -1,0 +1,68 @@
+---
+import Logo from '../assets/img/kalogo.png';
+---
+<nav id="navbar" class="navbar">
+    <div class="logo">
+        <!-- <img src={Logo.src} alt="Logok" class="logok"> -->
+         <p>Katherine</p>
+    </div>
+    
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#skills">Skills</li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="menu-btn">
+        <i class="fas fa-bars icon-bars"></i>
+        <i class="fas fa-times icon-close"></i>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.querySelector('.menu-btn');
+        const navLinks = document.getElementById('navLinks');
+        const links = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section'); 
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                navLinks?.classList.toggle('active');
+                menuBtn.classList.toggle('open');
+            });
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks?.classList.remove('active');
+                if(menuBtn) menuBtn.classList.remove('open');
+            });
+        });
+
+        // "Active Link" por Scroll ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3 
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    
+                    links.forEach(link => {
+                        link.classList.remove('active-link');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active-link');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    });
+</script>
+ 

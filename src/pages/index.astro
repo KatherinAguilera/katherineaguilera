@@ -1,11 +1,55 @@
 ---
-import Welcome from '../components/Welcome.astro';
+
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// UI
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Hero from '../components/Hero.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+
+import { projects } from '../data/projects';
 ---
 
-<Layout>
-	<Welcome />
+
+<Layout title="Portfolio | Katherine Aguilera">
+  <Navbar />
+
+  <!-- Hero  -->
+  <section id="home" class="home">
+    <Hero />
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <Skills />
+  </section>
+
+  <!-- Project -->
+  <section id="projects">
+    <h2 class="section-title reveal">Recent Projects</h2>
+    <div class="projects-grid">
+      {projects.map((project, index) => (
+          <ProjectCard 
+              title={project.title}
+              desc={project.desc}
+              img={project.img}
+              github={project.github}
+              tags={project.tags}
+              demo={project.demo}
+              types={project.types as "confidential" | "public" | undefined}
+              delay={`delay-${(index % 3 + 1) * 100}`} 
+          />
+      ))}
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <Contact />
+
+  <!-- Footer -->
+  <Footer />
+
 </Layout>

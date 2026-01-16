@@ -1,0 +1,69 @@
+---
+interface Props {
+  title: string;
+  desc: string;
+  img: string;
+  github?: string;
+  demo?: string;
+  types?: 'public' | 'confidential';
+  delay: string;
+  tags?: string[];
+}
+
+const { title, desc, img, github = "#", demo = "#", types = "public", delay, tags } = Astro.props;
+---
+
+<div class={`project-card reveal ${delay}`}>
+    
+  <div class="project-img-wrapper">
+    <img 
+      src={img} 
+      alt={title} 
+      class="project-img" 
+      loading="lazy" 
+    />
+    
+    <button class="expand-btn" data-img-trigger={img} aria-label="Expand image">
+        <i class="fas fa-expand"></i>
+    </button>
+  </div>
+  
+  <div class="project-info">
+    <h3 class="project-title">{title}</h3>
+    <p class="project-desc">{desc}</p>
+    <div class="tags-container">
+      {tags && tags.map((tag, index) => (
+        <span class={`project-tag tag-${tag.toLowerCase().replace('.', '')}`}>
+          {tag}
+        </span>
+      ))}
+    </div>
+
+    
+    <div class="project-links">  
+      {types === 'confidential' ? (
+        <button 
+            class="project-link private-lock" 
+            data-title={title} 
+            title="View Private Details"
+        >
+            <i class="fas fa-lock"></i> <span></span>
+        </button>
+        ) : (
+        <>
+          {github && github !== "#" && (
+              <a href={github} class="project-link" target="_blank" title="GitHub Code">
+                  <i class="fab fa-github"></i>
+              </a>
+          )}
+
+          {demo && demo !== "#" && (
+              <a href={demo} class="project-link" target="_blank" title="Live Demo">
+                  <i class="fas fa-external-link-alt"></i>
+              </a>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+</div>
