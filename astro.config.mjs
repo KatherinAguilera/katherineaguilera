@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://katherineaguilera.github.io',
-  base: '/katherinaguilera', 
+  // La URL de tu sitio en GitHub Pages
+  site: 'https://KatherinAguilera.github.io',
+  // El nombre exacto de tu repositorio
+  base: '/katherineaguilera',
 });
