@@ -1,48 +1,53 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
-  title: string;
+    title: string;
 }
 
 const { title } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{title}</title> 
-         <link rel="icon" sizes="192x192" href="./logo.png">
+        <title>{title}</title>
+        <link rel="icon" sizes="192x192" href="./logo.png" />
         <!-- Google Fonts: Outfit & Work Sans -->
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-        
+        <!-- <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        /> -->
+
         <!-- FontAwesome Icons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
     </head>
     <body>
         <canvas id="spaceCanvas" class="space-canvas"></canvas>
 
-        <slot /> 
+        <slot />
 
         <div id="image-modal-wrapper"></div>
         <div id="project-modal-wrapper"></div>
 
         <!-- SCRIPTS GLOBALES -->
         <script>
-            // @ts-nocheck 
-            document.addEventListener('DOMContentLoaded', () => {
-                
+            // @ts-nocheck
+            document.addEventListener("DOMContentLoaded", () => {
                 // --- (CANVAS) ---
-                const canvas = document.getElementById('spaceCanvas');
-                
+                const canvas = document.getElementById("spaceCanvas");
+
                 if (canvas) {
-                    const ctx = canvas.getContext('2d');
+                    const ctx = canvas.getContext("2d");
                     let width, height;
                     let stars = [];
                     let shootingStars = [];
-                    const STAR_COUNT = 400; 
+                    const STAR_COUNT = 400;
                     const SHOOTING_STAR_FREQ = 0.02;
 
                     function resize() {
@@ -51,11 +56,13 @@ const { title } = Astro.props;
                         canvas.width = width;
                         canvas.height = height;
                     }
-                    window.addEventListener('resize', resize);
+                    window.addEventListener("resize", resize);
                     resize();
 
                     class Star {
-                        constructor() { this.reset(true); }
+                        constructor() {
+                            this.reset(true);
+                        }
                         reset(initial = false) {
                             this.x = Math.random() * width;
                             this.y = initial ? Math.random() * height : -10;
@@ -67,7 +74,8 @@ const { title } = Astro.props;
                         update() {
                             this.y += 0.2 * this.z;
                             this.opacity += this.opacitySpeed;
-                            if (this.opacity > 1 || this.opacity < 0.2) this.opacitySpeed = -this.opacitySpeed;
+                            if (this.opacity > 1 || this.opacity < 0.2)
+                                this.opacitySpeed = -this.opacitySpeed;
                             if (this.y > height) this.reset();
                         }
                         draw() {
@@ -93,24 +101,28 @@ const { title } = Astro.props;
                             this.x -= this.speed * Math.cos(this.angle);
                             this.y += this.speed * Math.sin(this.angle);
                             this.life++;
-                            this.opacity = 1 - (this.life / this.maxLife);
+                            this.opacity = 1 - this.life / this.maxLife;
                         }
                         draw() {
                             if (this.opacity <= 0) return;
                             const gradient = ctx.createLinearGradient(
-                                this.x, this.y, 
-                                this.x + this.length * Math.cos(this.angle), 
-                                this.y - this.length * Math.sin(this.angle)
+                                this.x,
+                                this.y,
+                                this.x + this.length * Math.cos(this.angle),
+                                this.y - this.length * Math.sin(this.angle),
                             );
-                            gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-                            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                            gradient.addColorStop(
+                                0,
+                                `rgba(255, 255, 255, ${this.opacity})`,
+                            );
+                            gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
                             ctx.strokeStyle = gradient;
                             ctx.lineWidth = 2;
                             ctx.beginPath();
                             ctx.moveTo(this.x, this.y);
                             ctx.lineTo(
-                                this.x + this.length * Math.cos(this.angle), 
-                                this.y - this.length * Math.sin(this.angle)
+                                this.x + this.length * Math.cos(this.angle),
+                                this.y - this.length * Math.sin(this.angle),
                             );
                             ctx.stroke();
                         }
@@ -119,14 +131,22 @@ const { title } = Astro.props;
                     for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
 
                     function animate() {
-                        ctx.fillStyle = '#050b14';
+                        ctx.fillStyle = "#050b14";
                         ctx.fillRect(0, 0, width, height);
-                        stars.forEach(star => { star.update(); star.draw(); });
-                        if (Math.random() < SHOOTING_STAR_FREQ) shootingStars.push(new ShootingStar());
+                        stars.forEach((star) => {
+                            star.update();
+                            star.draw();
+                        });
+                        if (Math.random() < SHOOTING_STAR_FREQ)
+                            shootingStars.push(new ShootingStar());
                         for (let i = shootingStars.length - 1; i >= 0; i--) {
                             shootingStars[i].update();
                             shootingStars[i].draw();
-                            if (shootingStars[i].life >= shootingStars[i].maxLife) shootingStars.splice(i, 1);
+                            if (
+                                shootingStars[i].life >=
+                                shootingStars[i].maxLife
+                            )
+                                shootingStars.splice(i, 1);
                         }
                         requestAnimationFrame(animate);
                     }
@@ -134,33 +154,40 @@ const { title } = Astro.props;
                 }
 
                 // --- SCROLL REVEAL ---
-                const revealElements = document.querySelectorAll('.reveal');
+                const revealElements = document.querySelectorAll(".reveal");
                 const revealCallback = (entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) entry.target.classList.add('active');
-                        else entry.target.classList.remove('active');
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting)
+                            entry.target.classList.add("active");
+                        else entry.target.classList.remove("active");
                     });
                 };
-                const observer = new IntersectionObserver(revealCallback, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
-                revealElements.forEach(el => observer.observe(el));
+                const observer = new IntersectionObserver(revealCallback, {
+                    threshold: 0.15,
+                    rootMargin: "0px 0px -50px 0px",
+                });
+                revealElements.forEach((el) => observer.observe(el));
 
                 // --- NAVBAR ---
-                window.addEventListener('scroll', () => {
-                    const navbar = document.getElementById('navbar');
-                    if (navbar) { 
-                        if (window.scrollY > 50) navbar.classList.add('scrolled');
-                        else navbar.classList.remove('scrolled');
+                window.addEventListener("scroll", () => {
+                    const navbar = document.getElementById("navbar");
+                    if (navbar) {
+                        if (window.scrollY > 50)
+                            navbar.classList.add("scrolled");
+                        else navbar.classList.remove("scrolled");
                     }
                 });
 
                 // ---  MODAL ---
-                document.addEventListener('click', (e) => {
-                    
-                    const imgTrigger = e.target.closest('[data-img-trigger]');
+                document.addEventListener("click", (e) => {
+                    const imgTrigger = e.target.closest("[data-img-trigger]");
                     if (imgTrigger) {
-                        const imgUrl = imgTrigger.getAttribute('data-img-trigger');
-                        const wrapper = document.getElementById('image-modal-wrapper');
-                        
+                        const imgUrl =
+                            imgTrigger.getAttribute("data-img-trigger");
+                        const wrapper = document.getElementById(
+                            "image-modal-wrapper",
+                        );
+
                         wrapper.innerHTML = `
                             <div class="modal-overlay is-open" id="active-img-modal">
                                 <button class="close-img-modal" id="close-img-btn" aria-label="Close Image">
@@ -169,21 +196,30 @@ const { title } = Astro.props;
                                 <img src="${imgUrl}" class="full-screen-img" alt="Project Full View" />
                             </div>
                         `;
-                        
-                        const closeBtn = document.getElementById('close-img-btn');
-                        const overlay = document.getElementById('active-img-modal');
-                        
-                        if(closeBtn) closeBtn.onclick = () => wrapper.innerHTML = '';
-                        if(overlay) overlay.onclick = (ev) => {
-                            if(ev.target.id === 'active-img-modal') wrapper.innerHTML = '';
-                        };
+
+                        const closeBtn =
+                            document.getElementById("close-img-btn");
+                        const overlay =
+                            document.getElementById("active-img-modal");
+
+                        if (closeBtn)
+                            closeBtn.onclick = () => (wrapper.innerHTML = "");
+                        if (overlay)
+                            overlay.onclick = (ev) => {
+                                if (ev.target.id === "active-img-modal")
+                                    wrapper.innerHTML = "";
+                            };
                     }
 
-                    const confTrigger = e.target.closest('.private-lock');
+                    const confTrigger = e.target.closest(".private-lock");
                     if (confTrigger) {
-                        const projectTitle = confTrigger.getAttribute('data-title') || "Confidential Project";
-                        const wrapper = document.getElementById('project-modal-wrapper');
-                        
+                        const projectTitle =
+                            confTrigger.getAttribute("data-title") ||
+                            "Confidential Project";
+                        const wrapper = document.getElementById(
+                            "project-modal-wrapper",
+                        );
+
                         wrapper.innerHTML = `
                             <div class="modal-overlay is-open" id="active-conf-modal">
                                 <div class="modal-content">
@@ -205,13 +241,18 @@ const { title } = Astro.props;
                             </div>
                         `;
 
-                        const closeBtn = document.getElementById('close-conf-btn');
-                        const overlay = document.getElementById('active-conf-modal');
+                        const closeBtn =
+                            document.getElementById("close-conf-btn");
+                        const overlay =
+                            document.getElementById("active-conf-modal");
 
-                        if(closeBtn) closeBtn.onclick = () => wrapper.innerHTML = '';
-                        if(overlay) overlay.onclick = (ev) => {
-                            if(ev.target.id === 'active-conf-modal') wrapper.innerHTML = '';
-                        };
+                        if (closeBtn)
+                            closeBtn.onclick = () => (wrapper.innerHTML = "");
+                        if (overlay)
+                            overlay.onclick = (ev) => {
+                                if (ev.target.id === "active-conf-modal")
+                                    wrapper.innerHTML = "";
+                            };
                     }
                 });
             });
