@@ -180,6 +180,12 @@ nav.scrolled {
     line-height: initial;
 }
 
+.logo-nav {
+    position: relative;
+    top: 8px;
+    width: 64px;
+}
+
 .nav-links {
     display: flex;
     list-style: none;
